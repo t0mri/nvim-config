@@ -8,3 +8,5 @@ this is my simple clean nvim config, nothin speacial.
 - lsp-zero (lsp & auto-completion)
 - treesitter
 - gitsigns
+- vim tmux navigator
+- conform
