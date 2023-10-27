@@ -1,6 +1,7 @@
 -- essentials
 vim.g.mapleader = " "
 vim.o.rnu = true
+vim.o.tabstop = 4
 vim.o.shiftwidth = 4
 vim.g.netrw_liststyle = 3
 vim.o.swapfile = false
@@ -10,9 +11,10 @@ vim.o.undodir = os.getenv("HOME") .. "/.vim/undodir"
 vim.o.hlsearch = false
 vim.o.scrolloff = 8
 vim.o.wrap = true
+vim.loader.enable()
 
 -- custom keymaps
-vim.keymap.set("n", "<leader>e", vim.cmd.Ex)
+--vim.keymap.set("n", "<leader>e", vim.cmd.Ex)
 
 local lazypath = vim.fn.stdpath("data") .. "/lazy/lazy.nvim"
 if not vim.loop.fs_stat(lazypath) then
@@ -150,5 +152,25 @@ require("lazy").setup({
 				},
 			})
 		end,
+	},
+	{
+		"nvim-telescope/telescope-file-browser.nvim",
+		dependencies = { "nvim-telescope/telescope.nvim", "nvim-lua/plenary.nvim" },
+		config = function()
+			require("telescope").setup({
+				extensions = {
+					file_browser = {
+						quiet = true,
+						respect_gitignore = true,
+						hijack_netrw = true,
+					},
+				},
+			})
+			require("telescope").load_extension("file_browser")
+			vim.api.nvim_set_keymap("n", "<space>e", ":Telescope file_browser<CR>", { noremap = true })
+		end,
+	},
+	{
+		"nathom/filetype.nvim",
 	},
 })

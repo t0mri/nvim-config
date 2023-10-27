@@ -10,3 +10,5 @@ this is my simple clean nvim config, nothin speacial.
 - gitsigns
 - vim tmux navigator
 - conform
+- file browser (telescope)
+- filetype
