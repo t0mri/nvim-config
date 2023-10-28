@@ -13,3 +13,4 @@ this is my simple clean nvim config, nothin speacial.
 - file browser (telescope)
 - filetype
 - web dev icons
+- auto pairs

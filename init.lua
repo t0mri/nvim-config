@@ -10,7 +10,6 @@ vim.o.undofile = true
 vim.o.undodir = os.getenv("HOME") .. "/.vim/undodir"
 vim.o.hlsearch = false
 vim.o.scrolloff = 8
-vim.o.wrap = true
 vim.loader.enable()
 
 -- custom keymaps
@@ -59,7 +58,7 @@ require("lazy").setup({
 	},
 	{
 		"williamboman/mason.nvim",
-		lazy = false,
+		lazy = true,
 		config = true,
 	},
 
@@ -67,6 +66,7 @@ require("lazy").setup({
 	{
 		"hrsh7th/nvim-cmp",
 		event = "InsertEnter",
+		lazy = true,
 		dependencies = {
 			{ "L3MON4D3/LuaSnip" },
 		},
@@ -180,4 +180,5 @@ require("lazy").setup({
 			require("nvim-web-devicons").setup({})
 		end,
 	},
+	{ "jiangmiao/auto-pairs" },
 })
