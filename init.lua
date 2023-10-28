@@ -164,6 +164,8 @@ require("lazy").setup({
 					file_browser = {
 						respect_gitignore = true,
 						hijack_netrw = true,
+						hidden = { file_browser = true, folder_browser = true },
+						prompt_path = true,
 					},
 				},
 			})
