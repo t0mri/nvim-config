@@ -12,3 +12,4 @@ this is my simple clean nvim config, nothin speacial.
 - conform
 - file browser (telescope)
 - filetype
+- web dev icons

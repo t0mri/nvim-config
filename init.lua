@@ -1,8 +1,8 @@
 -- essentials
 vim.g.mapleader = " "
 vim.o.rnu = true
-vim.o.tabstop = 4
-vim.o.shiftwidth = 4
+vim.o.tabstop = 2
+vim.o.shiftwidth = 2
 vim.g.netrw_liststyle = 3
 vim.o.swapfile = false
 vim.o.backup = false
@@ -87,6 +87,7 @@ require("lazy").setup({
 					["<C-d>"] = cmp.mapping.scroll_docs(4),
 					["<C-f>"] = cmp_action.luasnip_jump_forward(),
 					["<C-b>"] = cmp_action.luasnip_jump_backward(),
+					["<CR>"] = cmp.mapping.confirm({ select = true }),
 				}),
 			})
 		end,
@@ -148,7 +149,8 @@ require("lazy").setup({
 				},
 				formatters_by_ft = {
 					lua = { "stylua" },
-					javascript = { "prettierd" },
+					--					javascript = { "prettierd" },
+					--					typescript = { "prettierd" },
 				},
 			})
 		end,
@@ -160,7 +162,6 @@ require("lazy").setup({
 			require("telescope").setup({
 				extensions = {
 					file_browser = {
-						quiet = true,
 						respect_gitignore = true,
 						hijack_netrw = true,
 					},
@@ -172,5 +173,11 @@ require("lazy").setup({
 	},
 	{
 		"nathom/filetype.nvim",
+	},
+	{
+		"nvim-tree/nvim-web-devicons",
+		config = function()
+			require("nvim-web-devicons").setup({})
+		end,
 	},
 })
