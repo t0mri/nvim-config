@@ -1,5 +1,6 @@
 -- essentials
 vim.g.mapleader = " "
+vim.o.nu = true
 vim.o.rnu = true
 vim.o.tabstop = 2
 vim.o.shiftwidth = 2
@@ -10,6 +11,7 @@ vim.o.undofile = true
 vim.o.undodir = os.getenv("HOME") .. "/.vim/undodir"
 vim.o.hlsearch = false
 vim.o.scrolloff = 8
+vim.o.wrap = false
 vim.loader.enable()
 
 -- custom keymaps
@@ -149,8 +151,6 @@ require("lazy").setup({
 				},
 				formatters_by_ft = {
 					lua = { "stylua" },
-					--					javascript = { "prettierd" },
-					--					typescript = { "prettierd" },
 				},
 			})
 		end,
@@ -170,7 +170,7 @@ require("lazy").setup({
 				},
 			})
 			require("telescope").load_extension("file_browser")
-			vim.api.nvim_set_keymap("n", "<space>e", ":Telescope file_browser<CR>", { noremap = true })
+			vim.api.nvim_set_keymap("n", "<leader>e", ":Telescope file_browser<CR>", { noremap = true })
 		end,
 	},
 	{
@@ -183,4 +183,23 @@ require("lazy").setup({
 		end,
 	},
 	{ "jiangmiao/auto-pairs" },
+	{
+		"kevinhwang91/nvim-ufo",
+		dependencies = "kevinhwang91/promise-async",
+		config = function()
+			vim.o.foldcolumn = "1"
+			vim.o.foldlevel = 99 -- Using ufo provider need a large value, feel free to decrease the value
+			vim.o.foldlevelstart = 99
+			vim.o.foldenable = true
+			require("ufo").setup()
+			vim.keymap.set("n", "ua", require("ufo").openAllFolds)
+			vim.keymap.set("n", "fa", require("ufo").closeAllFolds)
+		end,
+	},
+	{
+		"windwp/nvim-ts-autotag",
+		config = function()
+			require("nvim-ts-autotag").setup()
+		end,
+	},
 })

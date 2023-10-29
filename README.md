@@ -14,3 +14,5 @@ this is my simple clean nvim config, nothin speacial.
 - filetype
 - web dev icons
 - auto pairs
+- ufo (smart folding)
+- auto (closing) tags
