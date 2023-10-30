@@ -11,8 +11,8 @@ this is my simple clean nvim config, nothin speacial.
 - vim tmux navigator
 - conform
 - file browser (telescope)
-- filetype
 - web dev icons
 - auto pairs
 - ufo (smart folding)
 - auto (closing) tags
+- friendly snippets
