@@ -13,6 +13,8 @@ vim.o.hlsearch = false
 vim.o.scrolloff = 8
 vim.o.wrap = false
 vim.loader.enable()
+vim.opt.clipboard = "unnamedplus"
+vim.api.nvim_set_keymap("v", "<leader>y", ":%w !clip.exe<CR><CR>", { noremap = true })
 
 -- custom keymaps
 --vim.keymap.set("n", "<leader>e", vim.cmd.Ex)
@@ -34,23 +36,52 @@ require("lazy").setup({
 	{
 		"nvim-telescope/telescope.nvim",
 		tag = "0.1.4",
-		dependencies = { "nvim-lua/plenary.nvim" },
+		dependencies = { "nvim-lua/plenary.nvim", "nvim-telescope/telescope-file-browser.nvim" },
 		config = function()
+			local telescope = require("telescope")
+
+			telescope.setup({
+				pickers = {
+					find_files = {
+						find_command = {
+							"rg",
+							"--no-ignore",
+							"--hidden",
+							"--files",
+							"-g",
+							"!**/node_modules/*",
+							"-g",
+							"!**/.git/*",
+						},
+					},
+				},
+				extensions = {
+					file_browser = {
+						hidden = { file_browser = true, folder_browser = true },
+						prompt_path = true,
+					},
+				},
+			})
+
 			local builtin = require("telescope.builtin")
-			vim.keymap.set("n", "<leader>f", builtin.git_files, {})
-			vim.keymap.set("n", "<leader>af", builtin.find_files, {})
-			vim.keymap.set("n", "<leader>g", function()
-				builtin.grep_string({ search = vim.fn.input("Grep > ") })
-			end)
-			vim.keymap.set("n", "<leader>l", builtin.live_grep, {})
+			-- vim.keymap.set("n", "<leader>fg", builtin.git_files, {})
+			vim.keymap.set("n", "<leader>f", builtin.find_files, {})
+			vim.keymap.set("n", "<leader>g", builtin.live_grep, {})
 			vim.keymap.set("n", "<leader>b", builtin.buffers, {})
 			vim.keymap.set("n", "<leader>h", builtin.help_tags, {})
+
+			telescope.load_extension("file_browser")
+			vim.api.nvim_set_keymap(
+				"n",
+				"<space>e",
+				":Telescope file_browser path=%:p:h select_buffer=true<CR>",
+				{ noremap = true }
+			)
 		end,
 	},
 	{
 		"VonHeikemen/lsp-zero.nvim",
 		branch = "v3.x",
-		lazy = true,
 		config = false,
 		init = function()
 			-- Disable automatic setup, we are doing it manually
@@ -66,7 +97,6 @@ require("lazy").setup({
 	{
 		"hrsh7th/nvim-cmp",
 		event = "InsertEnter",
-		lazy = true,
 		dependencies = {
 			{ "L3MON4D3/LuaSnip" },
 			{ "rafamadriz/friendly-snippets" },
@@ -88,15 +118,14 @@ require("lazy").setup({
 					["<CR>"] = cmp.mapping.confirm({ select = true }),
 				}),
 				sources = cmp.config.sources({
-					{ name = "nvim_lsp" },
 					{ name = "luasnip" },
+					{ name = "nvim_lsp" },
 				}, {
 					{ name = "buffer" },
 				}),
 			})
 		end,
 	},
-
 	-- LSP
 	{
 		"neovim/nvim-lspconfig",
@@ -109,11 +138,9 @@ require("lazy").setup({
 		config = function()
 			local lsp_zero = require("lsp-zero")
 			lsp_zero.extend_lspconfig()
-
 			lsp_zero.on_attach(function(client, bufnr)
 				lsp_zero.default_keymaps({ buffer = bufnr })
 			end)
-
 			require("mason-lspconfig").setup({
 				handlers = {
 					lsp_zero.default_setup,
@@ -127,7 +154,7 @@ require("lazy").setup({
 		config = function()
 			require("nvim-treesitter.configs").setup({
 				auto_install = true,
-				ignore_install = { "html" },
+				ignore_install = { "html", "css" },
 				highlight = {
 					enable = true,
 					additional_vim_regex_highlighting = true,
@@ -148,31 +175,15 @@ require("lazy").setup({
 		"stevearc/conform.nvim",
 		config = function()
 			require("conform").setup({
-				format_on_save = {
-					lsp_fallback = true,
-				},
+				format_on_save = { async = true },
 				formatters_by_ft = {
 					lua = { "stylua" },
+					javascript = { "prettierd" },
+					typescript = { "prettierd" },
+					typescriptreact = { "prettierd" },
+					css = { "prettierd" },
 				},
 			})
-		end,
-	},
-	{
-		"nvim-telescope/telescope-file-browser.nvim",
-		dependencies = { "nvim-telescope/telescope.nvim", "nvim-lua/plenary.nvim" },
-		config = function()
-			require("telescope").setup({
-				extensions = {
-					file_browser = {
-						respect_gitignore = true,
-						hijack_netrw = true,
-						hidden = { file_browser = true, folder_browser = true },
-						prompt_path = true,
-					},
-				},
-			})
-			require("telescope").load_extension("file_browser")
-			vim.api.nvim_set_keymap("n", "<leader>e", ":Telescope file_browser<CR>", { noremap = true })
 		end,
 	},
 	{
@@ -190,9 +201,10 @@ require("lazy").setup({
 			vim.o.foldlevel = 99 -- Using ufo provider need a large value, feel free to decrease the value
 			vim.o.foldlevelstart = 99
 			vim.o.foldenable = true
-			require("ufo").setup()
-			vim.keymap.set("n", "ua", require("ufo").openAllFolds)
-			vim.keymap.set("n", "fa", require("ufo").closeAllFolds)
+			local ufo = require("ufo")
+			ufo.setup()
+			vim.keymap.set("n", "ua", ufo.openAllFolds)
+			vim.keymap.set("n", "fa", ufo.closeAllFolds)
 		end,
 	},
 	{
@@ -201,4 +213,40 @@ require("lazy").setup({
 			require("nvim-ts-autotag").setup()
 		end,
 	},
+	{
+		"folke/trouble.nvim",
+		dependencies = { "nvim-tree/nvim-web-devicons" },
+		config = function()
+			-- Lua
+			vim.keymap.set("n", "<leader>xx", function()
+				require("trouble").toggle()
+			end)
+			vim.keymap.set("n", "<leader>xw", function()
+				require("trouble").toggle("workspace_diagnostics")
+			end)
+			vim.keymap.set("n", "<leader>xd", function()
+				require("trouble").toggle("document_diagnostics")
+			end)
+			vim.keymap.set("n", "<leader>xq", function()
+				require("trouble").toggle("quickfix")
+			end)
+			vim.keymap.set("n", "<leader>xl", function()
+				require("trouble").toggle("loclist")
+			end)
+			vim.keymap.set("n", "gR", function()
+				require("trouble").toggle("lsp_references")
+			end)
+		end,
+	},
+	{
+		"crispgm/nvim-tabline",
+		dependencies = { "nvim-tree/nvim-web-devicons" }, -- optional
+		config = true,
+	},
 })
+
+-- tabline keymaps
+vim.keymap.set("n", "<leader>l", ":tabn<CR>")
+vim.keymap.set("n", "<leader>h", ":tabp<CR>")
+vim.keymap.set("n", "<leader>n", ":tabnew<CR>")
+vim.keymap.set("n", "<leader>w", ":tabc<CR>")
