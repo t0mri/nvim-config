@@ -18,3 +18,4 @@ this is my simple clean nvim config, nothin speacial.
 - friendly snippets
 - trouble
 - tabline
+- comment

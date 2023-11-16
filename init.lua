@@ -243,10 +243,20 @@ require("lazy").setup({
 		dependencies = { "nvim-tree/nvim-web-devicons" }, -- optional
 		config = true,
 	},
+	{
+		"terrortylor/nvim-comment",
+		config = function()
+			require("nvim_comment").setup({
+				comment_empty = false,
+			})
+			vim.keymap.set("n", "<C-_>", ":CommentToggle<CR>")
+			vim.keymap.set("v", "<C-_>", ":'<,'>CommentToggle<CR>")
+		end,
+	},
 })
 
 -- tabline keymaps
 vim.keymap.set("n", "<leader>l", ":tabn<CR>")
 vim.keymap.set("n", "<leader>h", ":tabp<CR>")
-vim.keymap.set("n", "<leader>n", ":tabnew<CR>")
+vim.keymap.set("n", "<leader>c", ":tabnew<CR>")
 vim.keymap.set("n", "<leader>w", ":tabc<CR>")
