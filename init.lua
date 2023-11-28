@@ -11,7 +11,7 @@ vim.o.undofile = true
 vim.o.undodir = os.getenv("HOME") .. "/.vim/undodir"
 vim.o.hlsearch = false
 vim.o.scrolloff = 8
-vim.o.wrap = false
+-- vim.o.wrap = false
 vim.loader.enable()
 vim.opt.clipboard = "unnamedplus"
 vim.api.nvim_set_keymap("v", "<leader>y", ":%w !clip.exe<CR><CR>", { noremap = true })
@@ -146,6 +146,17 @@ require("lazy").setup({
 					lsp_zero.default_setup,
 				},
 			})
+			vim.diagnostic.config({
+				virtual_text = false,
+				float = { source = "always" },
+				signs = true,
+				underline = true,
+				update_in_insert = true,
+				severity_sort = false,
+			})
+
+			vim.o.updatetime = 500
+			vim.cmd([[autocmd! CursorHold,CursorHoldI * lua vim.diagnostic.open_float(nil, {focus=false})]])
 		end,
 	},
 	{
@@ -182,6 +193,7 @@ require("lazy").setup({
 					typescript = { "prettierd" },
 					typescriptreact = { "prettierd" },
 					css = { "prettierd" },
+					json = { "prettierd" },
 				},
 			})
 		end,
