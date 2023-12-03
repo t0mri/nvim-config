@@ -192,6 +192,7 @@ require("lazy").setup({
 					javascript = { "prettierd" },
 					typescript = { "prettierd" },
 					typescriptreact = { "prettierd" },
+					html = { "prettierd" },
 					css = { "prettierd" },
 					json = { "prettierd" },
 				},
@@ -253,7 +254,12 @@ require("lazy").setup({
 	{
 		"crispgm/nvim-tabline",
 		dependencies = { "nvim-tree/nvim-web-devicons" }, -- optional
-		config = true,
+		config = function()
+			vim.keymap.set("n", "<leader>l", ":tabn<CR>")
+			vim.keymap.set("n", "<leader>h", ":tabp<CR>")
+			vim.keymap.set("n", "<leader>c", ":tabnew<CR>")
+			vim.keymap.set("n", "<leader>w", ":tabc<CR>")
+		end,
 	},
 	{
 		"terrortylor/nvim-comment",
@@ -265,10 +271,22 @@ require("lazy").setup({
 			vim.keymap.set("v", "<C-_>", ":'<,'>CommentToggle<CR>")
 		end,
 	},
+	{
+		"rose-pine/neovim",
+		name = "rose-pine",
+		config = function()
+			require("rose-pine").setup({ disable_italics = true })
+			vim.cmd("colorscheme rose-pine")
+		end,
+	},
+	{
+		"stevearc/oil.nvim",
+		dependencies = { "nvim-tree/nvim-web-devicons" },
+		config = function()
+			require("oil").setup()
+			vim.keymap.set("n", "-", "<CMD>Oil<CR>", { desc = "Open parent directory" })
+		end,
+	},
 })
 
 -- tabline keymaps
-vim.keymap.set("n", "<leader>l", ":tabn<CR>")
-vim.keymap.set("n", "<leader>h", ":tabp<CR>")
-vim.keymap.set("n", "<leader>c", ":tabnew<CR>")
-vim.keymap.set("n", "<leader>w", ":tabc<CR>")

@@ -19,3 +19,4 @@ this is my simple clean nvim config, nothin speacial.
 - trouble
 - tabline
 - comment
+- oil
