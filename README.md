@@ -20,3 +20,7 @@ this is my simple clean nvim config, nothin speacial.
 - tabline
 - comment
 - oil
+- Coc
+- Laravel
+- vim-blade
+- emmet
