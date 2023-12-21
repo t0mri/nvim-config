@@ -10,7 +10,7 @@ vim.o.backup = false
 vim.o.undofile = true
 vim.o.hlsearch = false
 vim.o.scrolloff = 8
--- vim.o.wrap = false
+vim.o.wrap = false
 vim.loader.enable()
 vim.opt.clipboard = "unnamedplus"
 vim.api.nvim_set_keymap("v", "<leader>y", ":%w !clip.exe<CR><CR>", { noremap = true })
@@ -40,6 +40,7 @@ require("lazy").setup({
 			local telescope = require("telescope")
 
 			telescope.setup({
+				defaults = { file_ignore_patterns = { ".git/", "node_modules", "vendor" } },
 				pickers = {
 					find_files = {
 						find_command = {
@@ -49,6 +50,8 @@ require("lazy").setup({
 							"--files",
 							"-g",
 							"!**/node_modules/*",
+							"-g",
+							"!**/vendor/*",
 							"-g",
 							"!**/.git/*",
 						},
@@ -257,6 +260,7 @@ require("lazy").setup({
 			vim.keymap.set("n", "<leader>h", ":tabp<CR>")
 			vim.keymap.set("n", "<leader>c", ":tabnew<CR>")
 			vim.keymap.set("n", "<leader>w", ":tabc<CR>")
+			vim.keymap.set("n", "<leader>L", ":tabmove<CR>")
 		end,
 	},
 	{
@@ -267,6 +271,8 @@ require("lazy").setup({
 			})
 			vim.keymap.set("n", "<C-_>", ":CommentToggle<CR>")
 			vim.keymap.set("v", "<C-_>", ":'<,'>CommentToggle<CR>")
+			vim.cmd([[autocmd BufEnter *.tsx :lua vim.api.nvim_buf_set_option(0, "commentstring", "{/* %s */}")]])
+			vim.cmd([[autocmd BufFilePost *.tsx :lua vim.api.nvim_buf_set_option(0, "commentstring", "{/* %s */}")]])
 		end,
 	},
 	{
@@ -281,13 +287,16 @@ require("lazy").setup({
 		"stevearc/oil.nvim",
 		dependencies = { "nvim-tree/nvim-web-devicons" },
 		config = function()
-			require("oil").setup()
+			require("oil").setup({
+				skip_confirm_for_simple_edits = true,
+			})
 			vim.keymap.set("n", "-", "<CMD>Oil<CR>", { desc = "Open parent directory" })
 		end,
 	},
 	{
 		"neoclide/coc.nvim",
 		branch = "release",
+		ft = { "blade", "php" },
 		config = function()
 			-- Some servers have issues with backup files, see #649
 			vim.opt.backup = false
