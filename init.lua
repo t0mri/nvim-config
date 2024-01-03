@@ -196,6 +196,7 @@ require("lazy").setup({
 					html = { "prettierd" },
 					css = { "prettierd" },
 					json = { "prettierd" },
+					python = { "isort" },
 				},
 			})
 		end,
@@ -280,7 +281,6 @@ require("lazy").setup({
 		name = "rose-pine",
 		config = function()
 			require("rose-pine").setup({ disable_italics = true })
-			vim.cmd("colorscheme rose-pine")
 		end,
 	},
 	{
@@ -521,4 +521,13 @@ require("lazy").setup({
 			require("telescope").load_extension("laravel")
 		end,
 	},
+	{ "nonlogicaldev/vim-jasmine-colortheme" },
+	{
+		"elianiva/telescope-npm.nvim",
+		config = function()
+			vim.keymap.set("n", "<leader>n", ":Telescope npm scripts<CR>")
+		end,
+	},
 })
+
+vim.cmd("colorscheme jasmine")
