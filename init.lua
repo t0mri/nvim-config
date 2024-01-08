@@ -141,6 +141,21 @@ require("lazy").setup({
 
 			vim.o.updatetime = 500
 			vim.cmd([[autocmd! CursorHold,CursorHoldI * lua vim.diagnostic.open_float(nil, {focus=false})]])
+
+			local lsp_configurations = require("lspconfig.configs")
+
+			if not lsp_configurations.blade then
+				lsp_configurations.blade = {
+					default_config = {
+						name = "blade",
+						cmd = { "laravel-dev-tools", "lsp" },
+						filetypes = { "blade" },
+						root_dir = require("lspconfig.util").root_pattern("composer.json"),
+					},
+				}
+			end
+
+			require("lspconfig").blade.setup({})
 		end,
 	},
 	{
